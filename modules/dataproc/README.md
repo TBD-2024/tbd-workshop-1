@@ -12,7 +12,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.23.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.44.2 |
 
 ## Modules
 
@@ -34,6 +34,7 @@ No modules.
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project name | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | GCP region | `string` | `"europe-west1"` | no |
 | <a name="input_subnet"></a> [subnet](#input\_subnet) | VPC subnet used for deployment | `string` | n/a | yes |
+| <a name="input_worker_preemptible_count"></a> [worker\_preemptible\_count](#input\_worker\_preemptible\_count) | Number of preemptible worker nodes in the cluster | `number` | `0` | no |
 
 ## Outputs
 

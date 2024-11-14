@@ -56,7 +56,77 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
 create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) 
 
-   ***place the expected consumption you entered here***
+   ```
+    version: 0.1
+resource_type_default_usage:
+  module.data-pipelines.google_storage_bucket.tbd-code-bucket:
+    storage_gb: 192                         
+    monthly_class_a_operations: 1000000       
+    monthly_class_b_operations: 12500000       
+    monthly_egress_data_transfer_gb:
+      same_continent: 550                   
+      worldwide: 12500                        
+      asia: 1500                              
+      china: 50                              
+      australia: 250                         
+
+  module.data-pipelines.google_storage_bucket.tbd-data-bucket:
+    storage_gb: 192                         
+    monthly_class_a_operations: 1000000       
+    monthly_class_b_operations: 12500000       
+    monthly_egress_data_transfer_gb:
+      same_continent: 550                   
+      worldwide: 12500                        
+      asia: 1500                              
+      china: 50                              
+      australia: 250  
+
+  module.vertex_ai_workbench.google_storage_bucket.notebook-conf-bucket:
+    storage_gb: 192                         
+    monthly_class_a_operations: 1000000       
+    monthly_class_b_operations: 12500000       
+    monthly_egress_data_transfer_gb:
+      same_continent: 550                   
+      worldwide: 12500                        
+      asia: 1500                              
+      china: 50                              
+      australia: 250 
+
+  google_storage_bucket.tbd-state-bucket:
+    storage_gb: 192                         
+    monthly_class_a_operations: 1000000       
+    monthly_class_b_operations: 12500000       
+    monthly_egress_data_transfer_gb:
+      same_continent: 550                   
+      worldwide: 12500                        
+      asia: 1500                              
+      china: 50                              
+      australia: 250 
+
+  module.gcp_mlflow_appengine.google_storage_bucket.mlflow_artifacts_bucket:
+    storage_gb: 192                         
+    monthly_class_a_operations: 1000000       
+    monthly_class_b_operations: 12500000       
+    monthly_egress_data_transfer_gb:
+      same_continent: 550                   
+      worldwide: 12500                        
+      asia: 1500                              
+      china: 50                              
+      australia: 250 
+
+  google_artifact_registry_repository.registry:
+    storage_gb: 50                            
+
+  module.gcp_mlflow_appengine.google_service_networking_connection.private_vpc_connection:
+    monthly_egress_data_transfer_gb:
+      same_region: 250                   
+      us_or_canada: 100                     
+      europe: 70                         
+      asia: 50                           
+      south_america: 100                   
+      oceania: 50               
+      worldwide: 200     
+   ```
 
    ***place the screenshot from infracost output here***
 

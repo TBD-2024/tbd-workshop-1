@@ -91,7 +91,21 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     
     3. Add support for preemptible/spot instances in a Dataproc cluster
 
-    ***place the link to the modified file and inserted terraform code***
+    [***link to the modified file***](https://github.com/TBD-2024/tbd-workshop-1/blob/master/modules/dataproc/main.tf)
+
+    ```
+    resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+
+        ...
+
+        preemptible_worker_config {
+            num_instances = 1
+        }
+    }
+    ```
+
+    ![img.png](doc/figures/13-2-dataproc1.png)
+    ![img.png](doc/figures/13-2-dataproc2.png)
     
     3. Perform additional hardening of Jupyterlab environment, i.e. disable sudo access and enable secure boot
     

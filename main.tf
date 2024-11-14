@@ -55,21 +55,21 @@ module "vertex_ai_workbench" {
   # FIXME:remove
   ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
   ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
-  vertex_machine_type = var.vertex_machine_type
+  vertex_machine_type          = var.vertex_machine_type
   ## To remove before workshop
 }
 
 #
 module "dataproc" {
-  depends_on   = [module.vpc]
-  source       = "./modules/dataproc"
-  project_name = var.project_name
-  region       = var.region
-  subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-  machine_type = "e2-standard-2"
+  depends_on          = [module.vpc]
+  source              = "./modules/dataproc"
+  project_name        = var.project_name
+  region              = var.region
+  subnet              = module.vpc.subnets[local.notebook_subnet_id].id
+  machine_type        = "e2-standard-2"
   worker_machine_type = var.worker_machine_type
   num_worker_nodes    = var.num_worker_nodes
-  master_machine_type    = var.master_machine_type
+  master_machine_type = var.master_machine_type
 }
 
 ## Uncomment for Dataproc batches (serverless)

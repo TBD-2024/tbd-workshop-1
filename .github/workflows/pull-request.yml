@@ -155,12 +155,7 @@ jobs:
       run: |
         infracost breakdown --path="." \
                             --format=json \
-                            --usage-file="infracost-usage.yml" \
                             --out-file=/tmp/infracost-base.json
-      - name: Generate Infracost cost estimate baseline and print
-      run: |
-        infracost breakdown --path="." \
-                            --usage-file="infracost-usage.yml" \
     - name: Checkout PR branch
       uses: actions/checkout@v3
     - name: Generate Infracost diff

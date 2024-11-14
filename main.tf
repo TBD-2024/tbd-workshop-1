@@ -159,3 +159,8 @@ resource "google_compute_firewall" "allow-all-internal" {
   }
   source_ranges = ["10.0.0.0/8"]
 }
+
+module "vertex_ai_workbench" {
+  source             = "./modules/vertex-ai-workbench"
+  vertex_machine_type = var.vertex_machine_type
+}

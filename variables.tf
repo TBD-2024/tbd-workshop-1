@@ -21,7 +21,13 @@ variable "num_worker_nodes" {
 }
 
 variable "worker_machine_type" {
-  description = "Dataproc Machine type"
+  description = "Dataproc Worker Machine type"
+  type        = string
+  default     = "n1-standard-8"
+}
+
+variable "master_machine_type" {
+  description = "Dataproc Master Machine type"
   type        = string
   default     = "n1-standard-8"
 }

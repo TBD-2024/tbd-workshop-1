@@ -55,6 +55,7 @@ module "vertex_ai_workbench" {
   # FIXME:remove
   ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
   ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
+  vertex_machine_type = var.vertex_machine_type
   ## To remove before workshop
 }
 
@@ -66,6 +67,9 @@ module "dataproc" {
   region       = var.region
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
   machine_type = "e2-standard-2"
+  worker_machine_type = var.worker_machine_type
+  num_worker_nodes    = var.num_worker_nodes
+  master_machine_type    = var.master_machine_type
 }
 
 ## Uncomment for Dataproc batches (serverless)
@@ -158,9 +162,4 @@ resource "google_compute_firewall" "allow-all-internal" {
     protocol = "all"
   }
   source_ranges = ["10.0.0.0/8"]
-}
-
-module "vertex_ai_workbench" {
-  source             = "./modules/vertex-ai-workbench"
-  vertex_machine_type = var.vertex_machine_type
 }

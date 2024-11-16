@@ -132,8 +132,25 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 10. Create a BigQuery dataset and an external table using SQL
     
     ***place the code and output here***
+    ```
+    CREATE SCHEMA IF NOT EXISTS tbd_dataset;
+
+    CREATE OR REPLACE EXTERNAL TABLE tbd_dataset.external_table
+    OPTIONS (
+      format = 'CSV',
+      uris = ['gs://tbd_sample/customers-100.csv']
+    );
+
+    SELECT * FROM tbd_dataset.external_table;
+
+    ```
+    ![img.png](doc/figures/tbd_external_table.png)
    
     ***why does ORC not require a table schema?***
+
+    The ORC (Optimized Row Columnar) format contains metadata that describes the schema of the data. 
+    This means that BigQuery can read this schema without having to manually define it when creating the table.
+
 
   
 11. Start an interactive session from Vertex AI workbench:

@@ -46,4 +46,7 @@ variable "env_size" {
 variable "env_variables" {
   type        = map(string)
   description = "Apache Airflow variables to set"
+  "spark.executor.memory" = "2.5g"
+  "spark.driver.memory"   = "2.5g"
+  "spark.yarn.executor.memoryOverhead" = "256m"
 }

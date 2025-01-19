@@ -66,7 +66,7 @@ module "composer" {
   }
   worker = {
     cpu        = 0.5
-    memory_gb  = 1.875
+    memory_gb  = 5
     storage_gb = 1
     min_count  = 1
     max_count  = 3

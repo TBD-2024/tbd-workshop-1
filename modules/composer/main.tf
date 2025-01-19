@@ -52,11 +52,7 @@ module "composer" {
   image_version             = var.image_version
   grant_sa_agent_permission = true
   composer_service_account  = google_service_account.tbd-composer-sa.email
-  env_variables = merge(var.env_variables, {
-    "spark.executor.memory" = "2.5g"
-    "spark.driver.memory"   = "2.5g"
-    "spark.yarn.executor.memoryOverhead" = "256m"
-  })
+  env_variables = var.env_variables
   scheduler = {
     cpu        = 0.5
     memory_gb  = 1.875

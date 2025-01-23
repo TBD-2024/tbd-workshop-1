@@ -1,13 +1,16 @@
 # Infracost runs on pull requests (PR) and posts PR comments.
 # If you use Infracost Cloud, Infracost also runs on main/master branch pushes so the dashboard is updated.
 # The GitHub Action docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) describe other trigger options.
+---
+name: Infracost
+
 on:
-    pull_request:
-      types: [opened, synchronize, closed]
-    push:
-      branches:
-        - main
-        - master
+  pull_request:
+    types: [opened, synchronize, closed]
+  push:
+    branches:
+      - main
+      - master
 
   env:
     # If you use private modules you'll need this env variable to use

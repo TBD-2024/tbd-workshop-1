@@ -77,15 +77,84 @@ the running instance of your Vertex AI Workbench
 
 7. Explore files created by generator and describe them, including format, content, total size.
 
-   ***Files desccription***
+Batch Folders:
+
+-   Batch1: Contains the majority of the generated data (approximately 9.4 GB). This likely represents the initial historical data load.
+-   Batch2: Contains incremental data updates (approximately 112 MB).
+-   Batch3: Contains further incremental data updates (approximately 112 MB).
+
+Each batch folder contains a similar set of files corresponding to the TPC-DI dimensions and facts, but with data specific to that batch's timeframe. The `Batch[1-3]_audit.csv` files provide metadata about each batch, including the date range covered.
+
+File Format:
+
+The files are primarily in two formats:
+
+-   Pipe-delimited text files (.txt): Most of the dimension files (e.g., `Date.txt`, `Industry.txt`, `Trade.txt`) are in this format.
+-   Comma-separated value files (.csv): Some files like `Prospect.csv` and `HR.csv` use this format.
+-   XML files (.xml): `CustomerMgmt.xml` is an example of an XML file.
+-   Fixed-width text files: The `FINWIRE` files are fixed-width, where each line represents a record, and fields are defined by their position within the line.
+
+Content:
+
+The files contain data related to a financial brokerage, including:
+
+-   Dimension Data:
+    -   `Date.txt`: Calendar and fiscal dates.
+    -   `DailyMarket.txt`: Daily stock market data.
+    -   `Industry.txt`: Industry classifications.
+    -   `Prospect.csv`: Potential customer information.
+    -   `TaxRate.txt`: Tax rates.
+    -   `HR.csv`: Employee data.
+    -   `WatchHistory.txt`: Customer watch list history.
+    -   `Trade.txt`: Trade orders.
+    -   `TradeHistory.txt`: Trade history.
+    -   `StatusType.txt`: Trade status types.
+    -   `TradeType.txt`: Trade types.
+    -   `HoldingHistory.txt`: Account holding history.
+    -   `CashTransaction.txt`: Cash transaction details.
+-   Fact Data (FINWIRE):
+    -   `FINWIRE`: Contains financial news wire data in a fixed-width format. It's further divided into:
+        -   `CMP`: Company data.
+        -   `SEC`: Security data.
+        -   `FIN`: Financial data.
+
+Total Size:
+
+-   As indicated in the notebook and confirmed by the `digen_report.txt` file, with a scale factor of 100, the generated data is approximately 10 GiB.
+-   The `digen_report.txt` file indicates a total of 162,228,471 records across all batches.
+-   The `du -h` output shows the following sizes for each batch:
+    -   `Batch1`: 9.4 GB
+    -   `Batch2`: 112 MB
+    -   `Batch3`: 112 MB
+
+Additional Files:
+
+-   Generator_audit.csv: Contains parameters used by the data generator.
+-   Batch[1-3]_audit.csv: Contains information about each generated batch, including the first and last day of data in the batch.
+-   digen_report.txt: Provides a summary of the data generation process, including start and end times, scale factor, total records, and performance metrics.
 
 8. Analyze tpcdi.py. What happened in the loading stage?
 
-   ***Your answer***
+The `tpcdi.py` script is responsible for loading the TPC-DI generated data into the data lakehouse. It uses Spark to perform the following steps:
+
+1. Initialization:
+2. File Processing (process_files function):
+3. Data Loading (load_csv function):
+4. File-Specific Loading Logic:
+
+In essence, the loading stage involves:
+
+1. Uploading the generated files to Google Cloud Storage.
+2. Reading each file into a Spark DataFrame, applying the appropriate schema.
+3. For `FINWIRE` files, performing transformations to extract fields from the fixed-width format.
+4. Saving the DataFrames as Parquet tables in the `digen` database, which serves as the initial landing zone for the raw data.
+
+Output:
+![2a-8](phase-2a-files/2a-8.png)
 
 9. Using SparkSQL answer: how many table were created in each layer?
 
-   ***SparkSQL command and output***
+![2a-9](phase-2a-files/2a-9.png)
 
 10. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.***
 

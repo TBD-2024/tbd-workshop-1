@@ -65,12 +65,6 @@ module "dataproc" {
   project_name = var.project_name
   region       = var.region
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-  master_config = {
-    machine_type = "e2-standard-4"
-  }
-  worker_config = {
-    machine_type = "e2-standard-4"
-  }
 }
 
 ## Uncomment for Dataproc batches (serverless)

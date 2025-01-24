@@ -17,7 +17,7 @@ resource "google_iam_workload_identity_pool_provider" "tbd-workload-identity-pro
     "attribute.org"  = "assertion.repository_owner"
     "attribute.refs" = "assertion.ref"
   }
-  attribute_condition = "attribute.org == \"${var.github_org}\""
+  attribute_condition = "attribute.repository == \"${var.github_org}/${var.github_repo}\""
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }

@@ -6,7 +6,7 @@ resource "google_iam_workload_identity_pool" "tbd-workload-identity-pool" {
   workload_identity_pool_id = "github-actions-pool"
 }
 
-# checkov:skip=CKV_GCP_125 Reason: Access is limited to a specific repository
+# checkov:skip
 resource "google_iam_workload_identity_pool_provider" "tbd-workload-identity-provider" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.tbd-workload-identity-pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "github-actions-provider"

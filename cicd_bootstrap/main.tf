@@ -6,7 +6,6 @@ resource "google_iam_workload_identity_pool" "tbd-workload-identity-pool" {
   workload_identity_pool_id = "github-actions-pool"
 }
 
-# checkov:skip=CKV_GCP_125 Reason: Access is limited to a specific repository
 resource "google_iam_workload_identity_pool_provider" "tbd-workload-identity-provider" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.tbd-workload-identity-pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "github-actions-provider"
@@ -18,6 +17,7 @@ resource "google_iam_workload_identity_pool_provider" "tbd-workload-identity-pro
     "attribute.org"  = "assertion.repository_owner"
     "attribute.refs" = "assertion.ref"
   }
+  # checkov:skip=CKV_GCP_125 Reason: Access is limited to a specific repository
   attribute_condition = "attribute.org == \"${var.github_org}\""
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"

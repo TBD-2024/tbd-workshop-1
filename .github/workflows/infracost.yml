@@ -12,6 +12,8 @@ on:
       - main
       - master
 
+permissions: read-all
+
 env:
   # If you use private modules you'll need this env variable to use
   # the same ssh-agent socket value across all jobs & steps.
@@ -108,6 +110,7 @@ jobs:
 
       - name: Run Infracost on default branch and update Infracost Cloud
         run: |
+
           infracost breakdown --path=. \
                     --format=json \
                     --out-file=infracost.json
@@ -134,3 +137,4 @@ jobs:
           "https://dashboard.api.infracost.io/graphql";
       env:
         INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+        

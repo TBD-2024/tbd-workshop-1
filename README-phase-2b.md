@@ -30,6 +30,7 @@ in profiles.yml.
 5. Analyze the performance and scalability of execution times of each model. Visualize and discuss the final results.
 
 ![2b.png](phase-2b-files/2b.png)
+
 [***link to Excel file***](https://github.com/TBD-2024/tbd-workshop-1/blob/phase-2/phase-2b-files/TBD%20-%20task%202B.xlsx)
 
 After gathering and visualizing the results of three full dbt runs for 1, 2 and 5 executors, we can see several resource-intensive tasks that produce spikes up to 4000 seconds. These tasks seem to be a great example of scalability, as their execution time changes are the most visible - the largest change was reported for task 18, which was processed with 5 executors in just 40% of the time needed with 1 executor.

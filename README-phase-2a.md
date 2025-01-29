@@ -57,7 +57,7 @@ the running instance of your Vertex AI Workbench
     a) in the first cell of the notebook replace: `%env DATA_BUCKET=tbd-2023z-9910-data` with your data bucket.
 
     ```
-    %env DATA_BUCKET=tbd-2024l-9910-data
+    %env DATA_BUCKET=tbd-2024z-336369-data
     %env GEN_OUTPUT_DIR=/tmp/tpc-di
     %env REPO_ROOT=/home/jupyter/git/tbd-tpc-di/
     ```

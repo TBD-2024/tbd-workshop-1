@@ -56,11 +56,11 @@ the running instance of your Vertex AI Workbench
 
     a) in the first cell of the notebook replace: `%env DATA_BUCKET=tbd-2023z-9910-data` with your data bucket.
 
-         ```
-         %env DATA_BUCKET=tbd-2024l-9910-data
-         %env GEN_OUTPUT_DIR=/tmp/tpc-di
-         %env REPO_ROOT=/home/jupyter/git/tbd-tpc-di/
-         ```
+    ```
+    %env DATA_BUCKET=tbd-2024l-9910-data
+    %env GEN_OUTPUT_DIR=/tmp/tpc-di
+    %env REPO_ROOT=/home/jupyter/git/tbd-tpc-di/
+    ```
 
    b) in the cell:
          ```%%bash
@@ -70,6 +70,16 @@ the running instance of your Vertex AI Workbench
          git pull
          ```
       replace repo with your fork. Next checkout to 'notebook' branch.
+
+      ```
+        %%bash
+        mkdir -p git && cd git
+        git clone https://github.com/TBD-2024/tbd-tpc-di
+        cd tbd-tpc-di
+        git pull
+        git checkout notebook
+        git pull
+      ```
    
     c) after running first cells your fork of `tbd-tpc-di` repository will be cloned into Vertex AI  enviroment (see git folder).
 

@@ -28,8 +28,11 @@ Worth to read:
 
     a) setup Vertex AI Workbench `pyspark` kernel as described in point [8](https://github.com/bdg-tbd/tbd-workshop-1/tree/v1.0.32#project-setup) 
 
-    b) upload [tpc-di-setup.ipynb](https://github.com/bdg-tbd/tbd-workshop-1/blob/v1.0.36/notebooks/tpc-di-setup.ipynb) to 
+    b) upload [tpc-di-setup.ipynb](https://github.com/bdg-tbd/tbd-workshop-1/blob/v1.0.36/notebooks/tpc-di-setup.ipynb) to     
 the running instance of your Vertex AI Workbench
+
+   ![2a-4b](phase-2a-files/4b.png)
+
 
 5. In `tpc-di-setup.ipynb` modify cell under section ***Clone tbd-tpc-di repo***:
 
@@ -53,6 +56,11 @@ the running instance of your Vertex AI Workbench
 
     a) in the first cell of the notebook replace: `%env DATA_BUCKET=tbd-2023z-9910-data` with your data bucket.
 
+         ```
+         %env DATA_BUCKET=tbd-2024l-9910-data
+         %env GEN_OUTPUT_DIR=/tmp/tpc-di
+         %env REPO_ROOT=/home/jupyter/git/tbd-tpc-di/
+         ```
 
    b) in the cell:
          ```%%bash
@@ -158,40 +166,41 @@ Output:
 
 10. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.***
 
-**fact_trade_date_not_null.sql**  
-   - This test ensures that the `trade_date` column in the `fact_trade` table is never `NULL`.  
-   - If any rows have `NULL` values in this column, it may indicate an issue in the ETL process.
+**fact_cash_balances_sk_customer_id.sql**  
+
+- Ensures that every cash balance entry is associated with a valid customer.
+- Failing this test means some transactions are missing customer IDs, which may indicate data integrity issues.
+
+```sql
+SELECT *
+FROM {{ ref('fact_cash_balances') }}
+WHERE sk_customer_id IS NULL
+```
+
+**fact_trade_sk_security_id.sql**  
+
+- Ensures that every trade is linked to a valid security.
+- Failing this test suggests missing security references, potentially due to ETL issues or incorrect joins.
 
 ```sql
 SELECT *
 FROM {{ ref('fact_trade') }}
-WHERE trade_date IS NULL;
+WHERE sk_security_id IS NULL
 ```
 
-**fact_trade_has_customer.sql**  
-   - This test checks if every trade in the `fact_trade` table is linked to a valid customer in the `dimension_customer` table.  
-   - If any trade has an `sk_customer_id` that does not exist in `dimension_customer`, it suggests potential referential integrity issues.
+**fact_trade_sk_trade_id.sql**  
+
+- Ensures that sk_trade_id is unique and that no trade appears more than once.
+- Failing this test indicates possible data duplication, which may lead to incorrect calculations in downstream analysis.
 
 ```sql
-SELECT ft.sk_trade_id, ft.sk_customer_id
-FROM {{ ref('fact_trade') }} ft
-LEFT JOIN {{ ref('dimension_customer') }} dc
-ON ft.sk_customer_id = dc.sk_customer_id
-WHERE dc.sk_customer_id IS NULL;
-```
-
-**fact_trade_is_not_null.sql**  
-   - This test verifies that the `fact_trade` table does not contain completely empty records.  
-   - If the table contains rows where all critical columns are `NULL`, it may indicate a data ingestion failure or incorrect transformations.
-
-```sql
-SELECT *
+SELECT sk_trade_id, COUNT(*)
 FROM {{ ref('fact_trade') }}
-WHERE sk_trade_id IS NULL
-  AND trade_date IS NULL
-  AND sk_customer_id IS NULL
-  AND trade_amount IS NULL;
+GROUP BY sk_trade_id
+HAVING COUNT(*) > 1
 ```
+   ![2a-10](phase-2a-files/11.png)
+
 
 11. In main.tf update
    ```
@@ -200,6 +209,52 @@ WHERE sk_trade_id IS NULL
    ```
    so dbt_git_repo points to your fork of tbd-tpc-di. 
 
+   ```
+   dbt_git_repo            = "https://github.com/TBD-2024/tbd-tpc-di.git"
+   dbt_git_repo_branch     = "main"
+   ```
+
 12. Redeploy infrastructure and check if the DAG finished with no errors:
 
-***The screenshot of Apache Aiflow UI***
+Unfortunately DAG finished with an error:
+
+```
+Error [2025-01-28, 23:21:14 UTC] {pod_manager.py:435} INFO - [base]   An error occurred while calling None.org.apache.spark.api.java.JavaSparkContext. [2025-01-28, 23:21:14 UTC] {pod_manager.py:435} INFO - [base]   : java.lang.IllegalArgumentException: Required executor memory (4096 MB), offHeap memory (0) MB, overhead (409 MB), and PySpark memory (0 MB) is above the max threshold (3278 MB) of this cluster! Please check the values of 'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb'.
+```
+We tested limitting usage of spark memory:
+
+```
+spark = SparkSession.builder \
+    .appName("TBD-TPC-DI-setup") \
+    .master("yarn") \
+    .enableHiveSupport() \
+    .config("spark.executor.memory", "2g") \
+    .config("spark.driver.memory", "2g") \
+    .config("spark.yarn.executor.memoryOverhead", "256m") \
+    .getOrCreate()
+
+```
+and applying higher limits:
+
+```
+spark = SparkSession.builder \
+    .appName("TBD-TPC-DI-setup") \
+    .master("yarn") \
+    .enableHiveSupport() \
+    .config("spark.executor.memory", "2g") \
+    .config("spark.driver.memory", "2g") \
+    .config("spark.yarn.executor.memoryOverhead", "256m") \
+    .config("maximum-allocation-mb", "5120m") \
+    .config("resource.memory-mb", "5120m") \
+    .getOrCreate()
+
+```
+The first try did not fix an error. During the second test, we ran out of credits.
+
+   ![2a-12](phase-2a-files/12.png)
+
+
+ ![end](phase-2a-files/end.png)
+
+
+

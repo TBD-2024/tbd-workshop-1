@@ -209,7 +209,7 @@ FROM {{ ref('fact_trade') }}
 GROUP BY sk_trade_id
 HAVING COUNT(*) > 1
 ```
-   ![2a-10](phase-2a-files/11.png)
+   ![2a-10](phase-2a-files/10.png)
 
 
 11. In main.tf update
